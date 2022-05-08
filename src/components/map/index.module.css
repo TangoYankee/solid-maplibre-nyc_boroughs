@@ -1,0 +1,28 @@
+.zoomContainer {
+  display: flex;
+  align-items: center;
+  width: min-content;
+  position: relative;
+  z-index: 1;
+  background: white;
+  width: max-content;
+  top: 0.5rem;
+  left: 0.5rem;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  padding: 1px;
+}
+
+.zoomLabel {
+  padding: 1px;
+}
+
+.zoomInput {
+  width: 3rem;
+}
+
+.mapContainer {
+  min-height: 100vh;
+}
+
