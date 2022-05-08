@@ -16,6 +16,7 @@ export const BoxedMap: Component = () => {
       zoom: zoom(),
     });
     map.on('move', () => setZoom(Number.parseFloat(map.getZoom().toFixed(2))));
+    fetch('./data/new-york-city-boroughs.geojson').then(response => console.info(response.json()));
   });
 
   const changeZoom = (event: Event) => {
