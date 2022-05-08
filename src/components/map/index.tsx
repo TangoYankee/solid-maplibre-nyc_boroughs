@@ -11,12 +11,27 @@ export const BoxedMap: Component = () => {
   onMount(() => {
     map = new maplibregl.Map({
       container: mapContainer,
-      center: [-74.5, 40],
+      center: [-74.00, 40.68],
       style: `https://api.maptiler.com/maps/basic/style.json?key=${import.meta.env.VITE_MAP_TILER_KEY}`,
       zoom: zoom(),
     });
     map.on('move', () => setZoom(Number.parseFloat(map.getZoom().toFixed(2))));
-    fetch('./data/new-york-city-boroughs.geojson').then(response => console.info(response.json()));
+    map.on('load', () => {
+      fetch('./data/new-york-city-boroughs.geojson')
+      .then(response => response.json())
+      .then(data => {
+        map.addSource('boroughs', {type: 'geojson', data: data });
+        map.addLayer({
+          id: 'boroughs',
+          'type': 'fill',
+          source: 'boroughs',
+          paint: {
+            'fill-outline-color': 'rgba(0,0,0,1)',
+            'fill-color': 'rgba(5,5,50,0.3)'
+          }
+        });
+      });
+    });
   });
 
   const changeZoom = (event: Event) => {
