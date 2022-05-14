@@ -19,19 +19,15 @@ export const BoxedMap: Component = () => {
     map.addControl(nav, 'top-left');
 
     map.on('load', () => {
-      fetch('./data/new-york-city-boroughs.geojson')
-      .then(response => response.json())
-      .then(data => {
-        map.addSource('boroughs', {type: 'geojson', data: data });
-        map.addLayer({
-          id: 'boroughs',
-          'type': 'fill',
-          source: 'boroughs',
-          paint: {
-            'fill-outline-color': 'rgba(0,0,0,1)',
-            'fill-color': 'rgba(5,5,50,0.3)'
-          }
-        });
+      map.addSource('boroughs', {type: 'geojson', data: `${import.meta.env.BASE_URL}/data/new-york-city-boroughs.geojson`});
+      map.addLayer({
+        id: 'boroughs',
+       'type': 'fill',
+        source: 'boroughs',
+        paint: {
+          'fill-outline-color': 'rgba(0,0,0,1)',
+          'fill-color': 'rgba(5,5,50,0.3)'
+        }
       });
     });
   });
