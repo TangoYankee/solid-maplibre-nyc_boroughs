@@ -1,7 +1,7 @@
 {
   "name": "vite-template-solid",
   "version": "0.0.0",
-  "homepage": "https://tangoyankee.github.io/solid_ts-maplibre-nyc_boroughs",
+  "homepage": "https://tangoyankee.github.io/solid-maplibre-nyc_boroughs",
   "description": "map of nyc boroughs",
   "scripts": {
     "deploy": "gh-pages -d dist",
