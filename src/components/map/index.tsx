@@ -15,6 +15,9 @@ export const BoxedMap: Component = () => {
       zoom: 9, 
     });
 
+    const nav = new maplibregl.NavigationControl();
+    map.addControl(nav, 'top-left');
+
     map.on('load', () => {
       fetch('./data/new-york-city-boroughs.geojson')
       .then(response => response.json())
