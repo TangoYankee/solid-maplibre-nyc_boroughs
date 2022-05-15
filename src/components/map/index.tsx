@@ -19,14 +19,52 @@ export const BoxedMap: Component = () => {
     map.addControl(nav, 'top-left');
 
     map.on('load', () => {
-      map.addSource('boroughs', {type: 'geojson', data: `${import.meta.env.BASE_URL}/data/new-york-city-boroughs.geojson`});
+      map.addSource(
+        'boroughs',
+        {
+          type: 'geojson',
+          generateId: true,
+          data: `${import.meta.env.BASE_URL}/data/new-york-city-boroughs.geojson`
+        }
+      );
       map.addLayer({
         id: 'boroughs',
-       'type': 'fill',
+        type: 'fill',
         source: 'boroughs',
         paint: {
-          'fill-outline-color': 'rgba(0,0,0,1)',
-          'fill-color': 'rgba(5,5,50,0.3)'
+          'fill-outline-color': '#000000',
+          'fill-color': '#627BC1',
+          'fill-opacity': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            0.75,
+            0.25
+          ]
+        }
+      });
+      
+      let hoveredBoroughId: number | null = null;
+      map.on('mousemove', 'boroughs', (e) => {
+        if(!e.features || e.features?.length === 0) return;
+        if(hoveredBoroughId !== null){
+          map.setFeatureState(
+            { source: 'boroughs', id: hoveredBoroughId },
+            { hover: false }
+          );
+        }
+        hoveredBoroughId = e.features[0].id as number;
+        map.setFeatureState(
+          { source: 'boroughs', id: hoveredBoroughId }, 
+          { hover: true }
+        );
+      });
+
+      map.on('mouseleave', 'boroughs', () => {
+        if(hoveredBoroughId !== null) {
+          map.setFeatureState(
+            { source: 'boroughs', id: hoveredBoroughId},
+            { hover: false }
+          );
         }
       });
     });
