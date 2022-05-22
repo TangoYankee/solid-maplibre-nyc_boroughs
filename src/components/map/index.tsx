@@ -11,6 +11,32 @@ export const BoxedMap: Component = () => {
   const [activeBoroughId, setActiveBoroughId] = createSignal<number | null>(null);
   const isActiveBorough = createSelector(activeBoroughId);
 
+  const toggleBoroughSelection = (selectedBoroughId: number) => {
+    if(activeBoroughId() === null) {
+      map.setFeatureState(
+        { source: 'boroughs', id: selectedBoroughId }, 
+        { hover: true }
+      );
+      setActiveBoroughId(selectedBoroughId);
+    } else if(activeBoroughId() === selectedBoroughId) {
+      map.setFeatureState(
+        { source: 'boroughs', id: selectedBoroughId },
+        { hover: false }
+      );
+      setActiveBoroughId(null);
+    } else if(activeBoroughId() !== selectedBoroughId) {
+      map.setFeatureState(
+        { source: 'boroughs', id: activeBoroughId() },
+        { hover: false }
+      );
+      map.setFeatureState(
+        { source: 'boroughs', id: selectedBoroughId }, 
+        { hover: true }
+      );
+      setActiveBoroughId(selectedBoroughId);
+    }
+  }
+
   onMount(() => {
     map = new maplibregl.Map({
       container: mapContainer,
@@ -47,32 +73,10 @@ export const BoxedMap: Component = () => {
         }
       });
       
-      let hoveredBoroughId: number | null = null;
-      map.on('mousemove', 'boroughs', (e) => {
+      map.on('click', 'boroughs', (e) => {
         if(!e.features || e.features?.length === 0) return;
-        if(hoveredBoroughId !== null){
-          map.setFeatureState(
-            { source: 'boroughs', id: hoveredBoroughId },
-            { hover: false }
-          );
-        }
-        hoveredBoroughId = e.features[0].id as number;
-        console.info('hbid::', hoveredBoroughId);
-        map.setFeatureState(
-          { source: 'boroughs', id: hoveredBoroughId }, 
-          { hover: true }
-        );
-        setActiveBoroughId(hoveredBoroughId);
-      });
-
-      map.on('mouseleave', 'boroughs', () => {
-        if(hoveredBoroughId !== null) {
-          map.setFeatureState(
-            { source: 'boroughs', id: hoveredBoroughId},
-            { hover: false }
-          );
-          setActiveBoroughId(null);
-        }
+        const selectedBoroughId = e.features[0].id as number;
+        toggleBoroughSelection(selectedBoroughId);
       });
     });
   });
@@ -82,7 +86,24 @@ export const BoxedMap: Component = () => {
       <div ref={mapContainer!} class={styles.mapContainer}/>
       <div class={styles.contextContainer}>
         <ul>
-          <For each={boroughs}>{(borough, index) => <li class={styles.borough} classList={{[styles.active]: isActiveBorough(index()) }}>{borough}</li>}</For>
+          <For each={boroughs}>{
+            (borough, index) => 
+              <li 
+                class={styles.borough} 
+                classList={{ [styles.active]: isActiveBorough(index()) }}
+              >
+                <button
+                  class={`
+                    ${styles.btn} 
+                    ${isActiveBorough(index()) ? styles.active : styles.dormant}
+                  `}
+                  onClick={() => toggleBoroughSelection(index())}
+                >
+                  {borough}
+                </button>
+              </li>
+            }
+          </For>
         </ul>
       </div>
     </div>
