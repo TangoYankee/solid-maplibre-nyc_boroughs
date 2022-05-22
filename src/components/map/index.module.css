@@ -1,4 +1,50 @@
-.mapContainer {
+.storyContainer {
+  display: flex;
   min-height: 100vh;
+  min-width: 100vw;
+}
+
+@media (orientation: landscape) {
+  .storyContainer {
+    flex-direction: row;
+  }
+}
+
+@media (orientation: portrait) {
+  .storyContainer {
+    flex-direction: column;
+  }
+}
+
+.contextContainer {
+  display: flex;
+}
+
+@media (orientation: landscape) {
+  .contextContainer {
+    width: 320px;
+  }
+}
+
+@media (orientation: portrait) {
+  .contextContainer {
+    height: 160px;
+  }
+}
+
+.mapContainer {
+  display: flex;
+}
+
+@media (orientation: landscape) {
+  .mapContainer {
+    flex: 1;
+  }
+}
+
+@media (orientation: portrait) {
+  .mapContainer {
+    flex: 1;
+  }
 }
 

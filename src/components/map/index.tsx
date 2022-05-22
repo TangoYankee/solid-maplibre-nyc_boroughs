@@ -71,8 +71,9 @@ export const BoxedMap: Component = () => {
   });
 
   return (
-    <div>
+    <div class={styles.storyContainer}>
       <div ref={mapContainer!} class={styles.mapContainer}/>
+      <div class={styles.contextContainer}>Hello, Element!</div>
     </div>
   )};
 
