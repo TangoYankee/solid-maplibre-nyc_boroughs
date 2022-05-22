@@ -32,6 +32,14 @@
   }
 }
 
+.borough {
+  color: grey;
+}
+
+.borough.active {
+  color: purple;
+}
+
 .mapContainer {
   display: flex;
 }

@@ -1,11 +1,15 @@
-import { Component, createSignal, onMount } from "solid-js";
+import { Component, createSelector, createSignal, For, onMount } from "solid-js";
 import 'maplibre-gl/dist/maplibre-gl.css';
 import  maplibregl, {Map} from "maplibre-gl";
 import styles from './index.module.css';
 
+const boroughs = ['staten-island', 'queens', 'brooklyn', 'manhattan', 'the bronx']
+
 export const BoxedMap: Component = () => {
   let map: Map;
   let mapContainer: HTMLDivElement;
+  const [activeBoroughId, setActiveBoroughId] = createSignal<number | null>(null);
+  const isActiveBorough = createSelector(activeBoroughId);
 
   onMount(() => {
     map = new maplibregl.Map({
@@ -53,10 +57,12 @@ export const BoxedMap: Component = () => {
           );
         }
         hoveredBoroughId = e.features[0].id as number;
+        console.info('hbid::', hoveredBoroughId);
         map.setFeatureState(
           { source: 'boroughs', id: hoveredBoroughId }, 
           { hover: true }
         );
+        setActiveBoroughId(hoveredBoroughId);
       });
 
       map.on('mouseleave', 'boroughs', () => {
@@ -65,6 +71,7 @@ export const BoxedMap: Component = () => {
             { source: 'boroughs', id: hoveredBoroughId},
             { hover: false }
           );
+          setActiveBoroughId(null);
         }
       });
     });
@@ -73,7 +80,11 @@ export const BoxedMap: Component = () => {
   return (
     <div class={styles.storyContainer}>
       <div ref={mapContainer!} class={styles.mapContainer}/>
-      <div class={styles.contextContainer}>Hello, Element!</div>
+      <div class={styles.contextContainer}>
+        <ul>
+          <For each={boroughs}>{(borough, index) => <li class={styles.borough} classList={{[styles.active]: isActiveBorough(index()) }}>{borough}</li>}</For>
+        </ul>
+      </div>
     </div>
   )};
 
