@@ -8,6 +8,7 @@ const boroughs = ['staten-island', 'queens', 'brooklyn', 'manhattan', 'the bronx
 export const BoxedMap: Component = () => {
   let map: Map;
   let mapContainer: HTMLDivElement;
+  const [isListShowing, setIsListShowing] = createSignal<boolean>(false);
   const [activeBoroughId, setActiveBoroughId] = createSignal<number | null>(null);
   const isActiveBorough = createSelector(activeBoroughId);
 
@@ -83,19 +84,26 @@ export const BoxedMap: Component = () => {
 
   return (
     <div class={styles.storyContainer}>
-      <div ref={mapContainer!} class={styles.mapContainer}/>
+      <div ref={mapContainer!} class={styles.mapContainer}>
+        <button 
+          class={styles.toggle} 
+          onClick={() => setIsListShowing(!isListShowing())}
+        >
+         {isListShowing() ? 'Hide' : 'Show'} List
+        </button>
+      </div>
+      { isListShowing() ? 
       <div class={styles.contextContainer}>
         <ul>
           <For each={boroughs}>{
             (borough, index) => 
               <li 
                 class={styles.borough} 
-                classList={{ [styles.active]: isActiveBorough(index()) }}
               >
                 <button
                   class={`
                     ${styles.btn} 
-                    ${isActiveBorough(index()) ? styles.active : styles.dormant}
+                    ${isActiveBorough(index()) ? styles.active : styles.default }
                   `}
                   onClick={() => toggleBoroughSelection(index())}
                 >
@@ -106,6 +114,7 @@ export const BoxedMap: Component = () => {
           </For>
         </ul>
       </div>
+      : <></> }
     </div>
   )};
 
