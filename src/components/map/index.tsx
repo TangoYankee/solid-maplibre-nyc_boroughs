@@ -73,6 +73,30 @@ export const BoxedMap: Component = () => {
         }
       });
       
+      map.addSource(
+        'airports',
+        {
+          type: 'geojson',
+          data: `${import.meta.env.BASE_URL}/data/new-york-city-airports.geojson`
+        }
+      );
+
+      map.addLayer({
+        id: 'airports',
+        type: 'fill',
+        source: 'airports',
+        paint: {
+          'fill-outline-color': '#000000',
+          'fill-color': '#ff0000',
+          'fill-opacity': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            0.75,
+            0.25
+          ]
+        }
+      });
+
       map.on('click', 'boroughs', (e) => {
         if(!e.features || e.features?.length === 0) return;
         const selectedBoroughId = e.features[0].id as number;
