@@ -97,6 +97,42 @@ export const BoxedMap: Component = () => {
         }
       });
 
+      map.addSource(
+        'amtrak-stations',
+        {
+          type: 'geojson',
+          data: `${import.meta.env.BASE_URL}/data/new-york-city-amtrak.geojson`
+        }
+      );
+
+      map.addLayer({
+        id: 'amtrak-stations',
+        type: 'circle',
+        source: 'amtrak-stations',
+        paint: {
+          'circle-radius': 6,
+          'circle-color': '#0000FF',
+        }
+      });
+
+      map.addSource(
+        'amtrak-track',
+        {
+          type: 'geojson',
+          data: `${import.meta.env.BASE_URL}/data/nyc-amtrak-track.geojson`
+        }
+      );
+
+      map.addLayer({
+        id: 'amtrak-track',
+        type: 'line',
+        source: 'amtrak-track',
+        paint: {
+          'line-color': '#0000FF',
+          'line-width': 2,
+        }
+      })
+
       map.on('click', 'boroughs', (e) => {
         if(!e.features || e.features?.length === 0) return;
         const selectedBoroughId = e.features[0].id as number;
