@@ -133,6 +133,42 @@ export const BoxedMap: Component = () => {
         }
       })
 
+      map.addSource(
+        'subway-stations',
+        {
+          type: 'geojson',
+          data: `${import.meta.env.BASE_URL}/data/nyc-subway-stations.geojson`
+        }
+      );
+
+      map.addLayer({
+        id: 'subway-stations',
+        type: 'circle',
+        source: 'subway-stations',
+        paint: {
+          'circle-radius': 3,
+          'circle-color': '#00FF00',
+        }
+      });
+
+      map.addSource(
+        'subway-lines',
+        {
+          type: 'geojson',
+          data: `${import.meta.env.BASE_URL}/data/nyc-subway-lines.geojson`
+        }
+      );
+
+      map.addLayer({
+        id: 'subway-lines',
+        type: 'line',
+        source: 'subway-lines',
+        paint: {
+          'line-color': '#00FF00',
+          'line-width': 1,
+        }
+      })
+
       map.on('click', 'boroughs', (e) => {
         if(!e.features || e.features?.length === 0) return;
         const selectedBoroughId = e.features[0].id as number;
